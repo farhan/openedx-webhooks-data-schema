@@ -14,11 +14,7 @@ from yaml.constructor import ConstructorError
 
 def valid_email(s):
     """Is this a valid email?"""
-    return bool(
-        isinstance(s, str) and
-        re.search(r"^[^@ ]+@[^@ ]+\.[^@ ]+$", s) and
-        not re.search(r"[,;?\\%]", s)
-    )
+    return bool(isinstance(s, str) and re.search(r"^[^@ ]+@[^@ ]+\.[^@ ]+$", s) and not re.search(r"[,;?\\%]", s))
 
 
 def not_empty_string(s):
@@ -32,7 +28,7 @@ def github_username(s):
     suffixes = ["[bot]", "%5Bbot%5D"]
     for suffix in suffixes:
         if s.endswith(suffix):
-            s = s[:-len(suffix)]
+            s = s[: -len(suffix)]
             break
     # For Anant, we added a star just to be sure we wouldn't find some other
     # account, so allow a star at the end.
@@ -63,6 +59,7 @@ ORGS_SCHEMA = Schema(
 # Adapted from https://gist.github.com/pypt/94d747fe5180851196eb
 # from https://bitbucket.org/xi/pyyaml/issues/9/ignore-duplicate-keys-and-send-warning-or
 
+
 def mapping_constructor(loader, node, deep=False):
     """Prevent duplicate keys and return an OrderedDict."""
 
@@ -71,8 +68,9 @@ def mapping_constructor(loader, node, deep=False):
         key = loader.construct_object(key_node, deep=deep)
         value = loader.construct_object(value_node, deep=deep)
         if key in mapping:
-            raise ConstructorError("while constructing a mapping", node.start_mark,
-                                   "found duplicate key (%s)" % key, key_node.start_mark)
+            raise ConstructorError(
+                "while constructing a mapping", node.start_mark, f"found duplicate key ({key})", key_node.start_mark
+            )
         mapping[key] = value
 
     return mapping
@@ -83,6 +81,7 @@ yaml.SafeLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, 
 
 # The public functions.
 
+
 def validate_orgs(filename):
     """
     Validate that `filename` conforms to our orgs.yaml schema.
@@ -91,7 +90,7 @@ def validate_orgs(filename):
         orgs = yaml.safe_load(f)
     ORGS_SCHEMA.validate(orgs)
     # keys should be sorted.
-    assert_sorted(orgs, "Keys in {}".format(filename))
+    assert_sorted(orgs, f"Keys in {filename}")
 
 
 def validate_salesforce_export(filename, encoding="cp1252"):
@@ -101,9 +100,14 @@ def validate_salesforce_export(filename, encoding="cp1252"):
     with open(filename, encoding=encoding) as fcsv:
         reader = csv.DictReader(fcsv)
         assert reader.fieldnames == [
-            "First Name", "Last Name", "Number of Active Ind. CLA Contracts",
-            "Title", "Account Name", "Number of Active Entity CLA Contracts", "GitHub Username",
-            "Is Core Contributor"
+            "First Name",
+            "Last Name",
+            "Number of Active Ind. CLA Contracts",
+            "Title",
+            "Account Name",
+            "Number of Active Entity CLA Contracts",
+            "GitHub Username",
+            "Is Core Contributor",
         ]
         for row in reader:
             acct = row["Account Name"]
@@ -128,8 +132,6 @@ def assert_sorted(strs, what):
         return
 
     lines = difflib.Differ().compare(strs, sstrs)
-    out_of_place = set(ln[2:] for ln in lines if ln.startswith(("-", "+")))
-    msg = "{} must be sorted. These are out of place: {}".format(
-        what, ", ".join(out_of_place)
-    )
-    assert False, msg
+    out_of_place = {ln[2:] for ln in lines if ln.startswith(("-", "+"))}
+    msg = f"{what} must be sorted. These are out of place: {', '.join(out_of_place)}"
+    raise AssertionError(msg)
