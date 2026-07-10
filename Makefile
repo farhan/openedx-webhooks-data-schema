@@ -31,7 +31,7 @@ requirements:  ## Sync dev dependencies
 	uv tool install tox --with tox-uv
 
 test:  ## Run tests
-	uv run tox -e "py{311,312}"
+	uv run tox -e "py312"
 
 docs:  ## Build documentation
 	uv run tox -e docs
