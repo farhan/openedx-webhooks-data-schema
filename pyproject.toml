@@ -139,14 +139,21 @@ directory = "htmlcov"
 version_scheme = "only-version"
 local_scheme = "no-local-version"
 
+# edx-lint uv constraints configuration
+# Add any repo-specific version overrides here; run `edx_lint write_uv_constraints` to apply.
+[tool.edx_lint]
+uv_constraints = []
+
 # uv configuration
 # https://docs.astral.sh/uv/reference/settings/
-# edx-lint uv constraints — machine-managed, do not edit directly
-# Run: uv run --with edx-lint edx_lint write_uv_constraints pyproject.toml
+#  DO NOT EDIT constraint-dependencies DIRECTLY.
+#  This list is managed by `edx_lint write_uv_constraints`
+#  and will be overwritten the next time `make upgrade` is run.
+#  - GLOBAL constraints: edit edx_lint/files/common_constraints.txt
+#  - REPO-SPECIFIC constraints: edit [tool.edx_lint].uv_constraints in this file
 [tool.uv]
 package = true
-constraint-dependencies = []
-# This section is machine-managed by edx-lint. Do not edit directly.
-
-[tool.edx_lint]
-# This section is read by edx-lint; do not edit the constraint-dependencies directly.
+constraint-dependencies = [
+    "Django<6.0",
+    "elasticsearch<7.14.0",
+]
