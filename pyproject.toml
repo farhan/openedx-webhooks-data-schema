@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "repo-tools-data-schema"
-dynamic = ["version"]
+version = "2.0"
 description = "Schema for repo-tools-data"
 readme = "README.rst"
 requires-python = ">=3.12"
@@ -132,12 +132,6 @@ show_missing = true
 
 [tool.coverage.html]
 directory = "htmlcov"
-
-# Setuptools SCM configuration
-# https://setuptools-scm.readthedocs.io/
-[tool.setuptools_scm]
-version_scheme = "only-version"
-local_scheme = "no-local-version"
 
 # edx-lint uv constraints configuration
 # Add any repo-specific version overrides here; run `edx_lint write_uv_constraints` to apply.
