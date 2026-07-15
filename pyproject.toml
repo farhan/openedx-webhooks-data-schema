@@ -1,0 +1,126 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "repo-tools-data-schema"
+version = "2.0"
+description = "Schema for repo-tools-data"
+readme = "README.rst"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
+authors = [
+    {name = "edX", email = "oscm@edx.org"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = [
+    "Python",
+    "edx",
+]
+dependencies = [
+    "PyYAML",
+    "schema",
+]
+
+[project.urls]
+Repository = "https://github.com/openedx/repo-tools-data-schema"
+
+[tool.setuptools.packages.find]
+exclude = ["tests*", "*.tests", "*.tests.*", "docs*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.rst"]
+
+[dependency-groups]
+# Base test packages
+test-base = [
+    "coverage",
+    "pytest-cov",
+    "pytest>=7.0",
+]
+# Default test group
+test = [
+    {include-group = "test-base"},
+]
+quality = [
+    {include-group = "test"},
+    "edx-lint",
+    "isort",
+    "pycodestyle",
+]
+doc = [
+    {include-group = "test"},
+    "doc8",
+    "readme-renderer",
+    "Sphinx",
+    "sphinx-book-theme",
+]
+ci = [
+    "tox",
+    "tox-uv",
+]
+dev = [
+    {include-group = "quality"},
+    {include-group = "ci"},
+    {include-group = "doc"},
+    "diff-cover",
+]
+
+# Pytest configuration
+# https://docs.pytest.org/en/stable/reference/customize.html
+[tool.pytest.ini_options]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+# Coverage configuration
+# https://coverage.readthedocs.io/en/latest/config.html
+[tool.coverage.run]
+branch = true
+source = ["repo_tools_data_schema"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+# edx-lint uv constraints configuration
+# Add any repo-specific version overrides here; run `edx_lint write_uv_constraints` to apply.
+[tool.edx_lint]
+uv_constraints = []
+
+# uv configuration
+# https://docs.astral.sh/uv/reference/settings/
+#  DO NOT EDIT constraint-dependencies DIRECTLY.
+#  This list is managed by `edx_lint write_uv_constraints`
+#  and will be overwritten the next time `make upgrade` is run.
+#  - GLOBAL constraints: edit edx_lint/files/common_constraints.txt
+#  - REPO-SPECIFIC constraints: edit [tool.edx_lint].uv_constraints in this file
+[tool.uv]
+package = true
+constraint-dependencies = [
+    "Django<6.0",
+    "elasticsearch<7.14.0",
+]
