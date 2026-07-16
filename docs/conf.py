@@ -6,8 +6,8 @@ import os
 import sys
 from datetime import datetime
 
-# Add the project root to the path for autodoc
-sys.path.insert(0, os.path.abspath(".."))
+# Add the src/ directory to the path for autodoc
+sys.path.insert(0, os.path.abspath("../src"))
 
 # -- Project information -----------------------------------------------------
 

@@ -33,6 +33,7 @@ dependencies = [
 Repository = "https://github.com/openedx/repo-tools-data-schema"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 exclude = ["tests*", "*.tests", "*.tests.*", "docs*"]
 
 [tool.setuptools.package-data]
@@ -86,7 +87,7 @@ addopts = "-v --tb=short"
 # https://coverage.readthedocs.io/en/latest/config.html
 [tool.coverage.run]
 branch = true
-source = ["repo_tools_data_schema"]
+source_pkgs = ["repo_tools_data_schema"]
 omit = [
     "*/tests/*",
     "*/__pycache__/*",
